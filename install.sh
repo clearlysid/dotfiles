@@ -1,43 +1,103 @@
+#!/bin/sh
 
-# install Homebrew
+# 1. Setup development environment
+# 2. Tweak macOS preferences
+# 3. Install apps
+
+# Function to install brew packages
+install_packages() {
+  for pkg in "$@"; do
+    brew install "$pkg"
+    if [ $? -eq 0 ]; then
+      echo "✅ $pkg installed"
+      echo "--------------------"
+    else
+      echo "❌ Failed to install $pkg"
+      echo "--------------------"
+    fi
+  done
+}
+
+# Function to install macOS apps with brew cask
+  for app in "$@"; do
+    brew install --cask "$app"
+    if [ $? -eq 0 ]; then
+      echo "✅ $app installed"
+      echo "--------------------"
+    else
+      echo "❌ Failed to install $app"
+      echo "--------------------"
+    fi
+  done
+}
+
+####################################
+# 1. Setup development environment 
+####################################
+
+# Install Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-
-# add homebrew to .zprofile 
+# Create .zprofile and add Homebrew to it
+touch ~/.zprofile
 echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/siddharth/.zprofile
-
 eval "$(/opt/homebrew/bin/brew shellenv)"
+echo '✅ brew installed'
+echo "--------------------\n"
 
-# remove the default message in apple terminal
-touch ~/.hushlogin
+# Install useful packages
+install_packages python neofetch sl
 
-# install python, neofetch, sl and ffmpeg
-brew install python neofetch sl ffmpeg
+# Install NVM (Not supported via Homebrew)
+curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh" | zsh
 
-# install nvm (doing this from homebrew is not supported)
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | zsh
-
-
-# Append the following lines to .zshrc
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
+echo "✅ nvm installed"
 
-# install node (latest and latest LTS) with nvm
+# Install Node and NPM (latest and LTS)
 nvm install node
 nvm install --lts
 
-# with npm, install yarn and netlify-cli
-npm install yarn -g
-npm install netlify-cli -g
+# Install Global NPM packages
+npm install yarn netlify-cli -g
 
-# install macOS apps
-brew install --cask visual-studio-code
-brew install --cask raycast
-brew install --cask handbrake
-brew install --cask iina
-brew install --cask the-unarchiver
-brew install --cask mouse-fix
-brew install --cask monitorcontrol
-brew install --cask kap
+# Move .zshrc to ~
+mv ./.zshrc ~
+
+# Configure Git
+
+
+####################################
+# 2. Tweak macOS Preferences
+####################################
+
+# Remove login message in Apple Terminal
+touch ~/.hushlogin
+
+
+####################################
+# 3. Install apps  
+####################################
+
+install_apps \
+  visual-studio-code \
+  raycast \
+  handbrake \
+  iina \
+  the-unarchiver \
+  mouse-fix \
+  monitorcontrol \
+  spitfire-audio \
+  ableton-live-standard \
+  figma \
+  framer \
+  blender \
+  affinity-designer \
+  affinity-photo \
+  slack \
+  microsoft-edge \
+  loom \
+  obsidian

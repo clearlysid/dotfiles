@@ -17,31 +17,21 @@ ideally this would work across OSes, but for the time being I'm going to be on m
 2. dock
 3. mouse and trackpad
 
-### dev env
+4. Clean Finder Window, remove all extra options
+    1. Home
+    2. Airdrop
+    3. Desktop
+    4. Applications
+    5. Downloads
+    6. Cloud Storage
+5. Uninstall useless apple apps
+6. Remove extra icons from Dock, Launchpad
 
-1. brew
-2. git
-3. zsh
-4. nvm
-5. node + npm
-6. yarn
-7. netlify
-8. vs code
-9. xcode + command line tools
+### dev env
 
 setup github auth
 
 in zsh setup config and plugins
 
-### macos apps
-
-1. figma
-2. framer
-3. slack
-4. dropbox
-5. blender
-6. mos
-7. monitor control
-8. kap
-9. iina
-10. handbrake
+-   agnoster theme
+-   inconsolata-dz font

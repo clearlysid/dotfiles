@@ -19,6 +19,7 @@ install_packages() {
 }
 
 # Function to install macOS apps with brew cask
+install_apps() {
   for app in "$@"; do
     brew install --cask "$app"
     if [ $? -eq 0 ]; then
@@ -76,6 +77,19 @@ mv ./.zshrc ~
 
 # Remove login message in Apple Terminal
 touch ~/.hushlogin
+
+# Tweak macOS preferences
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+echo "✅ Disabled automatic spelling correction"
+
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+echo "✅ Disabled automatic capitalization"
+
+defaults write com.apple.menuextra.battery ShowPercent -bool true
+echo "✅ Battery percentage display enabled"
+
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
+echo "✅ 3-finger drag gesture enabled"
 
 
 ####################################

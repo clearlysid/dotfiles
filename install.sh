@@ -47,23 +47,21 @@ echo '✅ brew installed'
 echo "--------------------\n"
 
 # Install useful packages
-install_packages python neofetch sl
+install_packages neofetch sl
 
-# Install NVM (Not supported via Homebrew)
-curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh" | zsh
+# Install FNM (Fast Node Manager)
+curl -fsSL https://fnm.vercel.app/install | zsh
+echo "✅ fnm installed"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+eval "$(fnm env --use-on-cd)"
+fnm completions --shell zsh
 
-echo "✅ nvm installed"
+# Install Node LTS
+fnm install --lts
+echo "✅ Node LTS installed"
 
-# Install Node and NPM (latest and LTS)
-nvm install node
-nvm install --lts
-
-# Install Global NPM packages
-npm install yarn netlify-cli -g
+# Install Yarn
+npm install yarn -g
 
 # Move .zshrc to ~
 mv ./.zshrc ~
@@ -111,7 +109,4 @@ install_apps \
   blender \
   affinity-designer \
   affinity-photo \
-  slack \
-  microsoft-edge \
-  loom \
   obsidian

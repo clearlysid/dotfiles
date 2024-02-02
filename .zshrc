@@ -5,7 +5,7 @@ setopt appendhistory
 setopt nomatch menucomplete
 stty stop undef		# Disable ctrl-s to freeze terminal.
 zle_highlight=('paste:none')
-unsetopt BEEP
+unsetopt BEEP # stops any beeping in terminal
 
 # Functions
 function zsh_add_plugin() {
@@ -23,15 +23,9 @@ function zsh_add_plugin() {
 }
 
 # Exports
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-eval "`pip3 completion --zsh`"
+
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
-
-# Aliases
-alias python=python3
 
 # Plugins
 zsh_add_plugin "zsh-users/zsh-autosuggestions"
@@ -68,4 +62,4 @@ PROMPT="%B%{$fg[magenta]%}[%{$fg[green]%}sid%{$fg[yellow]%}@%{$fg[green]%}dawn%{
 PROMPT+="\$vcs_info_msg_0_ "
 
 # Welcome Message
-eval "neofetch --color_blocks off"
+# eval "neofetch --color_blocks off"

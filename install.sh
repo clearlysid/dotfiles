@@ -1,10 +1,9 @@
 #!/bin/sh
 
 # 1. Setup development environment
-# 2. Tweak macOS preferences
-# 3. Install apps
+# 2. Install apps
+# 3. Tweak system preferences
 
-# Function to install packages
 install_packages() {
   for pkg in "$@"; do
     if [ "$(uname)" == "Darwin" ]; then
@@ -22,8 +21,7 @@ install_packages() {
   done
 }
 
-# Function to install macOS apps with brew cask
-install_apps() {
+install_mac_apps() {
   for app in "$@"; do
     brew install --cask "$app"
     if [ $? -eq 0 ]; then
@@ -48,7 +46,7 @@ if [ "$(uname)" == "Darwin" ]; then
 
     # Create .zprofile and add Homebrew to it
     touch ~/.zprofile
-    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/siddharth/.zprofile
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
     eval "$(/opt/homebrew/bin/brew shellenv)"
   fi
   echo '✅ Homebrew installed'
@@ -57,22 +55,27 @@ fi
 
 # Install Git if not installed
 if ! [ -x "$(command -v git)" ]; then
-  echo "❌ git is not installed. Installing Git..."  
+  echo "❌ Installing Git..."  
   install_packages git # Install Git
 else
-  echo "✅ git is already installed"
+  echo "✅ Git installed"
 fi
 
 # Install Zsh if not installed
 if ! [ -x "$(command -v zsh)" ]; then
-  echo "❌ zsh is not installed. Installing Zsh..."
+  echo "Installing Zsh..."
   install_packages zsh # Install Zsh
 else
-  echo "✅ zsh is already installed"
+  echo "✅ Zsh installed"
 fi
 
-# Install Rust
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+# install rust if not installed
+if ! [ -x "$(command -v rustc)" ]; then
+  echo "Installing Rust..."
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+else
+  echo "✅ Rust installed"
+fi
 
 # Install other packages
 install_packages neofetch sl
@@ -95,38 +98,13 @@ npm install yarn -g
 mv ./.zshrc ~
 
 
-
 ####################################
-# 2. Tweak macOS Preferences
+# 2. Install apps  
 ####################################
 
+# macOS apps
 if [ "$(uname)" == "Darwin" ]; then
-  # Remove login message in Apple Terminal
-  touch ~/.hushlogin
-
-  # Tweak macOS preferences
-  defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-  echo "✅ Disabled automatic spelling correction"
-
-  defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
-  echo "✅ Disabled automatic capitalization"
-
-  defaults write com.apple.menuextra.battery ShowPercent -bool true
-  echo "✅ Battery percentage display enabled"
-
-  defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
-  echo "✅ 3-finger drag gesture enabled"
-fi
-
-
-####################################
-# 3. Install apps  
-####################################
-
-# run the following only on macos
-if [ "$(uname)" == "Darwin" ]; then
-  # Install apps
-  install_apps \
+  install_mac_apps \
     visual-studio-code \
     raycast \
     handbrake \
@@ -141,5 +119,46 @@ if [ "$(uname)" == "Darwin" ]; then
     blender \
     affinity-designer \
     affinity-photo \
-    obsidian
+    obsidian \
+    google-chrome
+fi
+
+#  check if os is linux
+if [ "$(uname)" == "Linux" ]; then
+  sudo apt update
+
+  # google chrome
+  wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  sudo apt install ./google-chrome-stable_current_amd64.deb
+  rm google-chrome-stable_current_amd64.deb
+
+  # vs code
+  sudo apt install software-properties-common apt-transport-https
+  wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+  sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
+  sudo sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
+  sudo apt update
+  sudo apt install code
+fi
+
+
+####################################
+# 3. Tweak macOS Preferences
+####################################
+
+if [ "$(uname)" == "Darwin" ]; then
+  
+  touch ~/.hushlogin # Remove login message
+
+  defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+  echo "✅ Disabled automatic spelling correction"
+
+  defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+  echo "✅ Disabled automatic capitalization"
+
+  defaults write com.apple.menuextra.battery ShowPercent -bool true
+  echo "✅ Battery percentage display enabled"
+
+  defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
+  echo "✅ 3-finger drag gesture enabled"
 fi
